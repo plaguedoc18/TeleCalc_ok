@@ -19,7 +19,7 @@ namespace ITUniver.TeleCalc.Web.Controllers
         private OperationRepositories OperationRepository { get; set; }
         public CalcController()
         {
-            var connString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\ituniver\TeleCalc-webDB\TeleCalc-webDB\ITUniver.TeleCalc.Web\App_Data\TeleCalc.mdf;Integrated Security=True";
+            var connString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\ituniver\TeleCalc-webDB\TeleCalc_ok\ITUniver.TeleCalc.Web\App_Data\TeleCalc.mdf;Integrated Security=True";
             action = new Calc();
             HistoryRepository = new HistoryRepositories(connString);
             OperationRepository = new OperationRepositories(connString);
