@@ -1,0 +1,55 @@
+﻿@model IEnumerable<ITUniver.TeleCalc.Web.Models.HistoryItemModel>
+
+@{
+    ViewBag.Title = "History";
+}
+
+<h2>История</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Operation)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Initiator)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Args)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Result)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CalcDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Time)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Operation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Initiator)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Args)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Result)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CalcDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+        </tr>
+    }
+
+</table>

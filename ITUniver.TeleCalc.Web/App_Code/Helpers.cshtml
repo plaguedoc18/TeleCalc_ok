@@ -1,0 +1,13 @@
+﻿@helper LiList(string[] array)
+{
+    <ul>
+        @foreach (string elem in array)
+        {
+            <li>
+                <spam class="badge badge-info">
+                    @elem
+                </spam>
+            </li>
+        }
+    </ul>
+}

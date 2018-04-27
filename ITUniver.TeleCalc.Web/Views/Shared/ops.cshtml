@@ -1,0 +1,9 @@
+﻿@{
+    ViewBag.Title = "Ops";
+    var list = ViewBag.opers;
+}
+
+<h2>Текущие доступные операции</h2>
+
+@Helpers.LiList(list)
+<hr />

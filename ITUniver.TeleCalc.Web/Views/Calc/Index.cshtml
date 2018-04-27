@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "Кальк";
+    var opername = ViewBag.OperName;
+    var error = ViewBag.Error;
+}
+
+<h2>Суперкулькулятур</h2>
+
+<div> 
+    @if (error == null)
+    {
+        <div>
+            <b>@opername</b> (@ViewBag.x, @ViewBag.y) = @ViewBag.result
+        </div>
+    }
+    else
+    {
+        <div>
+            <b>@error</b>
+        </div>
+    }
+</div>
