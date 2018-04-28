@@ -8,7 +8,7 @@ using System.Web;
 
 namespace ITUniver.TeleCalc.Web.Repositories
 {
-    public class BaseRepositories<T> : IRepository<T> where T: IEntity
+    public class BaseRepositories<T> : IRepository<T> where T : IEntity
     {
         private string connectionString = "";
         public BaseRepositories(string connectString)
@@ -36,7 +36,12 @@ namespace ITUniver.TeleCalc.Web.Repositories
 
             foreach (var property in properties)
             {
-                property.SetValue(obj, reader[property.Name]);
+                var ind = reader.GetOrdinal(property.Name);
+                if (!reader.IsDBNull(ind))
+                {
+                    property.SetValue(obj, reader[property.Name]);
+                }
+
             }
 
             return obj;
@@ -72,9 +77,14 @@ namespace ITUniver.TeleCalc.Web.Repositories
 
         public T Load(int id)
         {
-            throw new NotImplementedException();
+            return Find($" [Id] = {id}").FirstOrDefault();
         }
         internal virtual string GetInsertQuery()
+        {
+            return "";
+        }
+
+        internal virtual string GetUpdateQuery()
         {
             return "";
         }
@@ -95,7 +105,7 @@ namespace ITUniver.TeleCalc.Web.Repositories
 
         public bool Save(T obj)
         {
-            if(obj.Id==0)
+            if (obj.Id == 0)
             {
                 using (var connection = new SqlConnection(connectionString))
                 {
@@ -104,7 +114,21 @@ namespace ITUniver.TeleCalc.Web.Repositories
                     command.Parameters.AddRange(InverseMap(obj));
                     connection.Open();
                     return command.ExecuteNonQuery() > 0;
-                }                
+                }
+            }
+            else
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    String query = GetUpdateQuery();
+
+                    SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddRange(InverseMap(obj));
+
+                    connection.Open();
+
+                    return command.ExecuteNonQuery() > 0;
+                }
             }
             return false;
         }

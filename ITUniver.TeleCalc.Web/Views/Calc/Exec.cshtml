@@ -2,6 +2,7 @@
  
 @{
     ViewBag.Title = "Вычислятор-Помогатор";
+    var TopOpers = ViewData["Top"] as IEnumerable<string>;
 }
 
 
@@ -22,6 +23,11 @@
                     htmlAttributes: new { @class = "form-control",
                         oninput = "calculate();" })
                 @Html.ValidationMessageFor(model => model.opername, "", new { @class = "text-danger" })
+            <br />
+                @foreach(string oper in TopOpers)
+                {
+                <input type="button"  class="btn btn-info"value="@oper" onclick="topcalc('@oper')"/>
+                }
             </div>
         </div>
 
@@ -109,9 +115,22 @@
 
         }
     }
-</script>@*Отправка с практики*@
-@*<script>
- inputY.onchange = function () {
-    document.getElementById('calc-form').submit();
-}
-</script> @*отправка при потери фокуса на inputY*@
+    function realCalc() {
+        $.ajax({
+            method: "POST",
+            url: "/Calc/Exec",
+            data: $('form').serializeArray()
+        }).success(
+            function (result) {
+                $("#result").html(result);
+            }
+        )
+
+    }
+
+    function topcalc(oper)
+    {
+        $("#OperName").val(oper);
+        realCalc();
+    }
+</script>

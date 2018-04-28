@@ -32,6 +32,9 @@ namespace ITUniver.TeleCalc.Web.Repositories
             return opers.FirstOrDefault();
         }
 
-
+        public IEnumerable<OperationModel> GetTop(int userId)
+        {
+            return Find("").Take(3);
+        }
     }
 }

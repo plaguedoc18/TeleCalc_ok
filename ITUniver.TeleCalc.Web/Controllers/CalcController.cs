@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace ITUniver.TeleCalc.Web.Controllers
 {
+    [Authorize]
     public class CalcController : Controller
     {
         private Calc action { get; set; }
@@ -29,6 +30,7 @@ namespace ITUniver.TeleCalc.Web.Controllers
         {
             var model = new CalcModel();
             model.OperationList = new SelectList(action.GetOpers());
+            ViewData["Top"] = OperationRepository.GetTop(1).Select(o => o.Name);
             return View(model);
         }
         [HttpPost]
@@ -39,22 +41,29 @@ namespace ITUniver.TeleCalc.Web.Controllers
             {
                 result = action.Exec(model.opername, model.InputData);
                 var operation = OperationRepository.LoadByName(model.opername);
-                if (operation != null)
+                if (operation == null)
                 {
-                    var history = new HistoryItemModel()
+                    OperationRepository.Save(new OperationModel()
                     {
-                        Operation = operation.Id,
-                        Initiator = 1,
-                        Result = result,
-                        Args = string.Join(";", model.InputData),
-                        CalcDate = DateTime.Now,
-                        Time = 15
-                    };
-
-                    HistoryRepository.Save(history);
+                        Name = model.opername,
+                        Owner = 1
+                    });
+                    operation = OperationRepository.LoadByName(model.opername);
                 }
+                var history = new HistoryItemModel()
+                {
+                    Operation = operation.Id,
+                    Initiator = 1,
+                    Result = result,
+                    Args = string.Join(";", model.InputData),
+                    CalcDate = DateTime.Now,
+                    Time = 15
+                };
+
+                HistoryRepository.Save(history);
+
             }
-            return PartialView("_Result", result);
+            return PartialView("ExecResult", result);
         }
         [HttpGet]
         public ActionResult Index(string opername, double? x, double? y)
@@ -64,7 +73,7 @@ namespace ITUniver.TeleCalc.Web.Controllers
                 ViewBag.OperName = opername.ToLower();
                 ViewBag.x = x;
                 ViewBag.y = y;
-                ViewBag.result = action.Exec(opername, new [] { x ?? 0, y ?? 0 });
+                ViewBag.result = action.Exec(opername, new[] { x ?? 0, y ?? 0 });
             }
             else
             {
@@ -83,7 +92,7 @@ namespace ITUniver.TeleCalc.Web.Controllers
             var items = HistoryRepository.Find("");
 
             return View(items);
-}
+        }
 
     }
 }
